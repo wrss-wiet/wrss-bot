@@ -1,14 +1,15 @@
+import json
 import discord
 from discord import app_commands
 from discord.ext import commands
-import json
 
 CONFIG_FILE = "seen_settings.json"
 
 try:
     with open(CONFIG_FILE, "r") as f:
         SEEN_SETTINGS = json.load(f)
-except FileNotFoundError:
+except (FileNotFoundError, json.JSONDecodeError) as e:
+    print(f"Error loading {CONFIG_FILE}: {e}. Using empty settings.")
     SEEN_SETTINGS = {}
 
 def save_seen_settings():
@@ -37,6 +38,8 @@ class SeenSettingsCog(commands.Cog):
         ]
     )
     async def seensettings(self, interaction: discord.Interaction, channel: discord.TextChannel = None, mode: str = None, scope: str = "all"):
+        await interaction.response.defer(ephemeral=True)
+
         if channel is not None and mode is not None:
             SEEN_SETTINGS[str(channel.id)] = mode
             save_seen_settings()
@@ -45,26 +48,39 @@ class SeenSettingsCog(commands.Cog):
                 description=f"Zaktualizowano ustawienie dla kanału {channel.mention} na `{mode}`.",
                 color=discord.Color.green()
             )
-            await interaction.response.send_message(embed=embed, ephemeral=True)
         else:
             if scope == "current":
                 ch = interaction.channel
-                setting = SEEN_SETTINGS.get(str(ch.id), "Always")
+
+                try:
+                    with open(CONFIG_FILE, "r") as f:
+                        current_settings = json.load(f)
+                    setting = current_settings.get(str(ch.id), "Always")
+                except Exception:
+                    setting = SEEN_SETTINGS.get(str(ch.id), "Always")
+
                 embed = discord.Embed(
                     title=f"Ustawienie dla bieżącego kanału: {ch.name}",
                     description=f"**{ch.name}** (ID: {ch.id}): `{setting}`",
                     color=discord.Color.blue()
                 )
-                await interaction.response.send_message(embed=embed, ephemeral=True)
             else:
                 guild = interaction.guild
                 embed = discord.Embed(title="Obecne ustawienia seen dla kanałów", color=discord.Color.blue())
                 description = ""
+
+                try:
+                    with open(CONFIG_FILE, "r") as f:
+                        current_settings = json.load(f)
+                except Exception:
+                    current_settings = SEEN_SETTINGS
+
                 for ch in guild.text_channels:
-                    setting = SEEN_SETTINGS.get(str(ch.id), "Always")
+                    setting = current_settings.get(str(ch.id), "Always")
                     description += f"**{ch.name}** (ID: {ch.id}): `{setting}`\n"
                 embed.description = description
-                await interaction.response.send_message(embed=embed, ephemeral=True)
+
+        await interaction.followup.send(embed=embed, ephemeral=True)
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(SeenSettingsCog(bot))
