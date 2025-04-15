@@ -56,13 +56,13 @@ class ZamowienieGrafikaModal(discord.ui.Modal, title="Zamówienie grafiki"):
         grafik_role_id = get_graphic_role_id(interaction.guild)
         role_mention = f"<@&{grafik_role_id}>" if grafik_role_id else "Brak roli 'Grafik'"
         
-        embed.add_field(name="Graficy", value=role_mention, inline=False)
+        # embed.add_field(name="Graficy", value=role_mention, inline=False)
         ordered_by = f"Zlecono przez: {interaction.user.display_name}"
         embed.set_footer(text=ordered_by)
         
         await interaction.response.send_message("Twoje zamówienie grafiki zostało złożone!", ephemeral=True)
         channel = interaction.channel
-        order_message = await channel.send(embed=embed)
+        order_message = await channel.send(role_mention, embed=embed)
         thread_name = f"Zamówienie: {self.nazwa.value}"
         try:
             await order_message.create_thread(name=thread_name)
