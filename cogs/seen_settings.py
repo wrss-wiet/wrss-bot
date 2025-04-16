@@ -2,6 +2,7 @@ import json
 import discord
 from discord import app_commands
 from discord.ext import commands
+import settings
 
 CONFIG_FILE = "seen_settings.json"
 
@@ -20,7 +21,7 @@ class SeenSettingsCog(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    @app_commands.command(name="seensettings", description="Konfiguracja ustawień reakcji seen dla kanałów.")
+    @app_commands.command(name="seensettings", description="Konfiguracja ustawień reakcji seen dla kanałów.", guild_ids=[settings.main_guild_id])
     @app_commands.describe(
         channel="Wybierz kanał (opcjonalnie, tylko przy aktualizacji)",
         mode="Wybierz tryb działania reakcji seen (opcjonalnie, tylko przy aktualizacji)",
@@ -40,7 +41,9 @@ class SeenSettingsCog(commands.Cog):
     async def seensettings(self, interaction: discord.Interaction, channel: discord.TextChannel = None, mode: str = None, scope: str = "all"):
         await interaction.response.defer(ephemeral=True)
 
-        if channel is not None and mode is not None:
+        if mode is not None:
+            if channel is None:
+                channel = interaction.channel
             SEEN_SETTINGS[str(channel.id)] = mode
             save_seen_settings()
             embed = discord.Embed(
