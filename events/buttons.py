@@ -1,5 +1,6 @@
 import discord
-from embed import *
+
+from embed import embed_res
 
 
 async def button_handler(bot, interaction: discord.Interaction):

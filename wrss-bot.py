@@ -1,7 +1,11 @@
 import discord
 import settings
 
-from events import ready_handler, message_handler, button_handler, reaction_change_handler, voice_handler
+from events.buttons import button_handler
+from events.message import message_handler
+from events.reaction import reaction_change_handler
+from events.ready import ready_handler
+from events.voice import voice_handler
 
 from discord.ext import commands
 

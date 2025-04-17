@@ -73,7 +73,7 @@ class ZamowienieGrafika(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    @discord.app_commands.command(name="zamowieniegrafik", description="Złóż zamówienie grafiki według szablonu", guild_ids=[settings.main_guild_id])
+    @discord.app_commands.command(name="zamowieniegrafik", description="Złóż zamówienie grafiki według szablonu")
     async def zamowieniegrafik(self, interaction: discord.Interaction):
         modal = ZamowienieGrafikaModal()
         await interaction.response.send_modal(modal)

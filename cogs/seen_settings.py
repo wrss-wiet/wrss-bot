@@ -1,8 +1,9 @@
 import json
 import discord
+import settings
+
 from discord import app_commands
 from discord.ext import commands
-import settings
 
 CONFIG_FILE = "seen_settings.json"
 
@@ -21,7 +22,7 @@ class SeenSettingsCog(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    @app_commands.command(name="seensettings", description="Konfiguracja ustawień reakcji seen dla kanałów.", guild_ids=[settings.main_guild_id])
+    @app_commands.command(name="seensettings", description="Konfiguracja ustawień reakcji seen dla kanałów.")
     @app_commands.describe(
         channel="Wybierz kanał (opcjonalnie, tylko przy aktualizacji)",
         mode="Wybierz tryb działania reakcji seen (opcjonalnie, tylko przy aktualizacji)",

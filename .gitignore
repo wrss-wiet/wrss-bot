@@ -5,5 +5,7 @@ docker-compose.yml
 .env
 __pycache__
 .idea
+.vscode
 
 seen_settings.json
+role_settings.json

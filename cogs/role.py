@@ -1,15 +1,14 @@
 import discord
 import json
+import typing
+import settings
+
 from emoji import is_emoji
 from discord import app_commands
 from discord.ext import commands
-import typing
-from embed import *
-import settings
-
+from embed import embed_res
 
 CONFIG_FILE = "role_settings.json"
-
 
 class Role(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
@@ -34,9 +33,9 @@ class Role(commands.Cog):
         grupy = self.ROLE_SETTINGS.keys()
 
         embed = discord.Embed(title="Lista grup ról",
-                              color=discord.Color.purple())
+                            color=discord.Color.purple())
         [embed.add_field(name=f"Grupa: {x}", inline=False, value=(" | ".join(["{} <@&{}>".format(str(y["emotka"]), str(y["id"]))
-                         for y in self.ROLE_SETTINGS[x]]) if len(self.ROLE_SETTINGS[x]) > 0 else "*brak ról w grupie*")) for x in grupy]
+                        for y in self.ROLE_SETTINGS[x]]) if len(self.ROLE_SETTINGS[x]) > 0 else "*brak ról w grupie*")) for x in grupy]
 
         return await interaction.response.send_message(embed=embed, ephemeral=True)
 
