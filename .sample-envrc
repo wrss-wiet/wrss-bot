@@ -5,6 +5,6 @@ export DOODLE_SEEN_REACTION='✅'
 export NOTIFY_ROLE_ID=<your_notify_role_id>
 export GRAPHIC_ROLE_ID=<your_graphic_role_id>
 export DISCORD_CLIENT_TOKEN=<your_discord_client_token>
-export DOODLE_LINKS=https://doodle.com/meeting/participate,https://lettucemeet.com
+export DOODLE_LINKS=<your_doodle_links>  # comma-separated list of URLs
 export VOICE_CREATOR=<your_voice_creator_id>
 export VC_CATEGORY=<your_voice_category_id>
