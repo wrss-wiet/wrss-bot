@@ -1,8 +1,9 @@
 import discord
 import settings
-from discord import ChannelType
 import re
 import json
+
+from discord import ChannelType
 
 def get_thread_name(content: str) -> str:
     title = re.search(r'\[[^\]]*\]', content)

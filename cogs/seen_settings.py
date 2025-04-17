@@ -1,5 +1,7 @@
 import json
 import discord
+import settings
+
 from discord import app_commands
 from discord.ext import commands
 
@@ -40,7 +42,9 @@ class SeenSettingsCog(commands.Cog):
     async def seensettings(self, interaction: discord.Interaction, channel: discord.TextChannel = None, mode: str = None, scope: str = "all"):
         await interaction.response.defer(ephemeral=True)
 
-        if channel is not None and mode is not None:
+        if mode is not None:
+            if channel is None:
+                channel = interaction.channel
             SEEN_SETTINGS[str(channel.id)] = mode
             save_seen_settings()
             embed = discord.Embed(
