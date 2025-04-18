@@ -1,0 +1,21 @@
+{
+    "default": {
+        "title": "",
+        "description": "",
+        "url": "",
+        "color": "0x66ccff",
+        "footer": {
+            "text": "",
+            "icon_url": ""
+        },
+        "image": "",
+        "thumbnail": "",
+        "author": {
+            "name": "",
+            "url": "",
+            "icon_url": ""
+        },
+        "fields": [{"name": "", "value": "", "inline": "false"}],
+        "buttons": [{"label": "", "emoji": "", "style": "", "url": "", "embed": {}}]
+    }
+}

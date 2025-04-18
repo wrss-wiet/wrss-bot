@@ -5,6 +5,7 @@ import settings
 async def ready_handler(bot):
     print(f'We have logged in as {bot.user}')
     try:
+        bot.tree.copy_global_to(guild=discord.Object(id=settings.main_guild_id))
         await bot.tree.sync(guild=discord.Object(id=settings.main_guild_id))
         print("Application commands synchronized.")
 

@@ -25,7 +25,7 @@ class Role(commands.Cog):
             json.dump(self.ROLE_SETTINGS, f, indent=4)
 
     group = app_commands.Group(
-        name="role", description="Komenda do zarządzania grupami ról.", guild_ids=[settings.main_guild_id])
+        name="role", description="Komenda do zarządzania grupami ról.")
 
     @group.command(name="lista", description="Wyświetla dostępne grupy ról.")
     async def lista(self, interaction: discord.Interaction) -> None:
@@ -52,20 +52,17 @@ class Role(commands.Cog):
         return await embed_res(interaction, f"Poprawnie utworzono grupę ról o nazwie: `` {nazwa} ``!", 1)
 
     async def grupa_autocompletion(self, interaction: discord.Interaction, current: str) -> typing.List[app_commands.Choice[str]]:
-        data = []
-        for grupa in self.ROLE_SETTINGS.keys():
-            if current.lower() in grupa.lower():
-                data.append(app_commands.Choice(name=grupa, value=grupa))
-        return data
+        return [app_commands.Choice(name=x, value=x) for x in self.ROLE_SETTINGS.keys() if current.lower() in x.lower()][:25]
 
     @group.command(name="dodaj", description="Dodaje rolę do wybrenej grupy.")
     @app_commands.describe(
         grupa="Grupa, do której mam dodać rolę.",
         rola="Rola, którą mam dodać do grupy.",
-        emotka="Emotka przypisana do roli."
+        emotka="Emotka przypisana do roli.",
+        opis="Opis roli."
     )
     @app_commands.autocomplete(grupa=grupa_autocompletion)
-    async def dodaj(self, interaction: discord.Interaction, grupa: str, rola: discord.Role, emotka: str) -> None:
+    async def dodaj(self, interaction: discord.Interaction, grupa: str, rola: discord.Role, emotka: str, opis: typing.Optional[str] = "") -> None:
         if not grupa in self.ROLE_SETTINGS.keys():
             return await embed_res(interaction, "Grupa o podanej nazwie nie istnieje!", 0)
         if not is_emoji(emotka):
@@ -74,9 +71,9 @@ class Role(commands.Cog):
         if emotka in [x["emotka"] for x in self.ROLE_SETTINGS[grupa]]:
             return await embed_res(interaction, "Podana emotka jest już przypisana do innej roli w podanej grupeie!", 0)
         if rola.id in [x["id"] for x in self.ROLE_SETTINGS[grupa]]:
-            return await embed_res(interaction, "Podana rola jest już podanej grupeie!", 0)
+            return await embed_res(interaction, "Podana rola jest już w podanej grupie!", 0)
 
-        self.ROLE_SETTINGS[grupa].append({"emotka": emotka, "id": rola.id})
+        self.ROLE_SETTINGS[grupa].append({"emotka": emotka, "id": rola.id, "opis": opis})
         self.save_seen_settings()
 
         return await embed_res(interaction, f"Poprawnie dodano rolę {rola.mention} do grupy `` {grupa} ``!", 1)
@@ -94,7 +91,7 @@ class Role(commands.Cog):
             return await embed_res(interaction, "Podana emotka nie jest poprawna!", 0)
 
         if not emotka in [x["emotka"] for x in self.ROLE_SETTINGS[grupa]]:
-            return await embed_res(interaction, "Podana emotka nie istnieje w podanej grupeie!", 0)
+            return await embed_res(interaction, "Podana emotka nie istnieje w podanej grupie!", 0)
 
         self.ROLE_SETTINGS[grupa] = [
             i for i in self.ROLE_SETTINGS[grupa] if i["emotka"] != emotka]
@@ -114,7 +111,7 @@ class Role(commands.Cog):
 
         [view.add_item(discord.ui.Button(style=discord.ButtonStyle.blurple, emoji=x["emotka"], custom_id=f"role-{x['id']}")) for x in self.ROLE_SETTINGS[grupa]]
 
-        desc = [f"{x['emotka']} - <@&{x['id']}>" for x in self.ROLE_SETTINGS[grupa]]
+        desc = [f"{x['emotka']} - <@&{x['id']}>{f'`` {x["opis"]} ``' if 'opis' in x and x['opis'] != '' else ''}" for x in self.ROLE_SETTINGS[grupa]]
         embed = discord.Embed(title=f"Wybierz rolę z grupy: {grupa}", description="\n".join(
             desc), color=discord.Color.purple())
         embed.set_footer(

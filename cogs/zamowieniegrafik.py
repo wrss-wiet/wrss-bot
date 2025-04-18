@@ -1,7 +1,19 @@
 import discord
+from embed import embed_res
 import settings
 
 from discord.ext import commands
+from discord import app_commands
+
+
+class ZamowienieGrafika(commands.Cog):
+    def __init__(self, bot: commands.Bot):
+        self.bot = bot
+
+    @app_commands.command(name="zamowieniegrafik", description="Złóż zamówienie grafiki według szablonu")
+    async def zamowieniegrafik(self, interaction: discord.Interaction):
+        modal = ZamowienieGrafikaModal()
+        await interaction.response.send_modal(modal)
 
 def get_graphic_role_id(guild: discord.Guild) -> int:
     graphic_role_id = settings.graphic_role_id
@@ -60,7 +72,7 @@ class ZamowienieGrafikaModal(discord.ui.Modal, title="Zamówienie grafiki"):
         ordered_by = f"Zlecono przez: {interaction.user.display_name}"
         embed.set_footer(text=ordered_by)
         
-        await interaction.response.send_message("Twoje zamówienie grafiki zostało złożone!", ephemeral=True)
+        await embed_res(interaction, "Zamówienie grafiki zostało złożone!", 1)
         channel = interaction.channel
         order_message = await channel.send(role_mention, embed=embed)
         thread_name = f"Zamówienie: {self.nazwa.value}"
@@ -68,15 +80,6 @@ class ZamowienieGrafikaModal(discord.ui.Modal, title="Zamówienie grafiki"):
             await order_message.create_thread(name=thread_name)
         except Exception as e:
             print(f"Error creating thread: {e}")
-
-class ZamowienieGrafika(commands.Cog):
-    def __init__(self, bot: commands.Bot):
-        self.bot = bot
-
-    @discord.app_commands.command(name="zamowieniegrafik", description="Złóż zamówienie grafiki według szablonu")
-    async def zamowieniegrafik(self, interaction: discord.Interaction):
-        modal = ZamowienieGrafikaModal()
-        await interaction.response.send_modal(modal)
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(ZamowienieGrafika(bot))

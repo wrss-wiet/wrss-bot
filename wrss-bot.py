@@ -40,6 +40,7 @@ async def setup_hook():
     await bot.load_extension("cogs.seen_settings")
     await bot.load_extension("cogs.zamowieniegrafik")
     await bot.load_extension("cogs.role")
+    await bot.load_extension("cogs.embedy")
 
 @bot.event
 async def on_voice_state_update(member, before, after):
