@@ -12,9 +12,9 @@ COPY embed.py /app
 COPY cogs/ /app/cogs
 COPY events/ /app/events
 
-# optional
 COPY seen_settings.json /app
 COPY role_settings.json /app
+COPY embed_settings.json /app
 
 RUN python3 -m pip install -r requirements.txt
 

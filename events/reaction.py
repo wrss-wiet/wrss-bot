@@ -21,7 +21,7 @@ async def update_reaction_msg(bot, message: discord.Message):
 def reactions_to_str(reactions) -> str:
     message = "reactions:\n"
     for reaction in reactions:
-        message += f"{reaction.emoji} - ` {reaction.count+8} `\n"
+        message += f"{reaction.emoji} - ` {reaction.count} `\n"
     return message
 
 async def get_reaction_msg(bot, message: discord.Message):
