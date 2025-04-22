@@ -48,8 +48,8 @@ class Embedy(commands.Cog):
     @app_commands.describe(nazwa="Nazwa embedu")
     @app_commands.autocomplete(nazwa=wyslij_autocomplete)
     async def wyslij(self, interaction: discord.Interaction, nazwa: str):
-        
-        if not nazwa in self.EMBED_SETTINGS.keys() or nazwa == "default": return await embed_res(interaction, f"Nie znaleziono embedu `` {nazwa} ``", 0)
+        if not nazwa in self.EMBED_SETTINGS.keys() or nazwa == "default":
+            return await embed_res(interaction, f"Nie znaleziono embedu `` {nazwa} ``", 0)
         embed_data = self.EMBED_SETTINGS.get(nazwa)
         
         embed = discord.Embed()
@@ -67,7 +67,7 @@ class Embedy(commands.Cog):
                 elif key == "thumbnail":
                     embed.set_thumbnail(url=value)
                 elif key == "author":
-                        embed.set_author(name=value.get("name", ""), url=value.get("url", ""), icon_url=value.get("icon_url", ""))
+                    embed.set_author(name=value.get("name", ""), url=value.get("url", ""), icon_url=value.get("icon_url", ""))
                 elif key == "fields":
                     for field in value:
                         embed.add_field(name=field["name"], value=field["value"], inline=field.get("inline", False))
@@ -75,16 +75,23 @@ class Embedy(commands.Cog):
         view = discord.ui.View(timeout=None)
         if "buttons" in embed_data.keys():
             for i in range(len(embed_data["buttons"])):
-                button = discord.ui.Button(label=embed_data["buttons"][i].get("label", ""), style=discord.ButtonStyle.primary)
-                if "emoji" in embed_data["buttons"][i].keys():
-                    button.emoji = embed_data["buttons"][i]["emoji"]
-                if "url" in embed_data["buttons"][i].keys():
-                    button.style = discord.ButtonStyle.link
-                    button.url = embed_data["buttons"][i]["url"]
+                btn_data = embed_data["buttons"][i]
+                if "url" in btn_data:
+                    button = discord.ui.Button(
+                        label=btn_data.get("label", ""),
+                        style=discord.ButtonStyle.link,
+                        url=btn_data["url"]
+                    )
+                    if "emoji" in btn_data:
+                        button.emoji = btn_data["emoji"]
                 else:
-                    button.style = discord.ButtonStyle[embed_data["buttons"][i]["style"].lower()]
-                    button.custom_id = f"embed-{nazwa}-{i}"
-                    
+                    button = discord.ui.Button(
+                        label=btn_data.get("label", ""),
+                        style=discord.ButtonStyle[btn_data.get("style", "primary").lower()],
+                        custom_id=f"embed-{nazwa}-{i}"
+                    )
+                    if "emoji" in btn_data:
+                        button.emoji = btn_data["emoji"]
                 view.add_item(button)
         
         await interaction.channel.send(embed=embed, view=view)
@@ -110,5 +117,6 @@ class EmbedModal(discord.ui.Modal, title="Embed"):
         self.bot.get_cog('Embedy').save_seen_settings()
 
         return await embed_res(interaction, f"Zapisano embed `` {self.nazwa} ``", 1)
+
 async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(Embedy(bot))
