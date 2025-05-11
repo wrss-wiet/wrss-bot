@@ -7,7 +7,7 @@ from discord import app_commands
 
 from embed import embed_res
 
-CONFIG_FILE = "embed_settings.json"
+CONFIG_FILE = "commands_settings/embed_settings.json"
 
 class Embedy(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:

@@ -5,7 +5,7 @@ import settings
 from discord import app_commands
 from discord.ext import commands
 
-CONFIG_FILE = "seen_settings.json"
+CONFIG_FILE = "commands_settings/seen_settings.json"
 
 try:
     with open(CONFIG_FILE, "r") as f:

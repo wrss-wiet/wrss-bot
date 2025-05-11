@@ -11,10 +11,10 @@ def get_thread_name(content: str) -> str:
 
 async def add_seen_reaction(message: discord.Message):
     try:
-        with open("seen_settings.json", "r") as f:
+        with open("commands_settings/seen_settings.json", "r") as f:
             current_settings = json.load(f)
     except Exception as e:
-        print(f"Error loading seen_settings.json: {e}")
+        print(f"Error loading commands_settings/seen_settings.json: {e}")
         current_settings = {}
 
     channel_id_str = str(message.channel.id)

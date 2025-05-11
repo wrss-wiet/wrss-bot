@@ -8,7 +8,7 @@ from discord import app_commands
 from discord.ext import commands
 from embed import embed_res
 
-CONFIG_FILE = "role_settings.json"
+CONFIG_FILE = "commands_settings/role_settings.json"
 
 class Role(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:

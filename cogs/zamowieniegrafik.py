@@ -91,6 +91,11 @@ class NewGrafikaModal(discord.ui.Modal, title="Zamówienie grafiki"):
 
         await embed_res(interaction, "Zamówienie grafiki zostało złożone!", 1)
         order_msg = await interaction.channel.send(role_mention, embed=embed)
+        embed.set_footer(text=f"Zlecono przez: {interaction.user.display_name} \nID wiadomości: {order_msg.id}")
+        await order_msg.edit(
+            content=f"<@&{grafik_role}>",
+            embed=embed
+        )
         try:
             await order_msg.create_thread(name=f"Zamówienie: {self.nazwa.value}")
         except Exception:
@@ -127,8 +132,9 @@ class EditGrafikaModal(discord.ui.Modal, title="Edytuj zamówienie grafiki"):
             value=self.motyw.value or "Brak",
             inline=False
         )
+        embed.set_footer(text=f"Zlecono przez: {interaction.user.display_name} \nID wiadomości: {self._msg.id}")
         await self._msg.edit(embed=embed)
-        await interaction.response.send_message("Zamówienie zaktualizowane!", ephemeral=True)
+        embed_res(interaction, "Zamówienie zaktualizowane!", 1)
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(ZamowienieGrafika(bot))

@@ -3,7 +3,7 @@ import json
 
 from embed import embed_res
 
-with open("embed_settings.json", "r", encoding="utf8") as f:
+with open("commands_settings/embed_settings.json", "r", encoding="utf8") as f:
     EMBED_SETTINGS = json.load(f)
 
 async def button_handler(bot, interaction: discord.Interaction):

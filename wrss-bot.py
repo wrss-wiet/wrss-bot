@@ -1,6 +1,7 @@
 import discord
 import settings
 
+from events.ready import ready
 from events.buttons import button_handler
 from events.message import message_handler
 from events.reaction import reaction_change_handler
@@ -16,8 +17,8 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 
 @bot.event
 async def on_ready():
-    print(f"Logged in as {bot.user.name} in gild: {settings.main_guild_id}")
-
+    await ready(bot)
+    
 @bot.event
 async def on_message(message):
     await message_handler(bot, message)
@@ -42,6 +43,7 @@ async def setup_hook():
     await bot.load_extension("cogs.zamowieniegrafik")
     await bot.load_extension("cogs.role")
     await bot.load_extension("cogs.embedy")
+    await bot.load_extension("cogs.eventsarch_settings")
 
     try:
         await bot.tree.sync(guild=discord.Object(id=settings.main_guild_id))

@@ -7,6 +7,4 @@ __pycache__
 .idea
 .vscode
 
-seen_settings.json
-role_settings.json
-embed_settings.json
+commands_settings/*

@@ -8,3 +8,6 @@ export DISCORD_CLIENT_TOKEN=<your_discord_client_token>
 export DOODLE_LINKS=<your_doodle_links>  # comma-separated list of URLs
 export VOICE_CREATOR=<your_voice_creator_id>
 export VC_CATEGORY=<your_voice_category_id>
+export EVENTS_CATEGORY=<your_events_active_category_id>
+export EVENTS_ARCHIVE=<your_events_archive_category_id>
+export DEF_ARCHIVE=<time_in_days>
