@@ -1,5 +1,7 @@
 import discord
 import json
+import settings
+
 from discord.ext import commands
 from discord import app_commands
 
@@ -21,7 +23,11 @@ class Embedy(commands.Cog):
         with open(CONFIG_FILE, "w") as f:
             json.dump(self.EMBED_SETTINGS, f, indent=4)
 
-    grupa = discord.app_commands.Group(name="embed", description="Komendy do embedów")
+    grupa = discord.app_commands.Group(
+        name="embed",
+        description="Komendy do embedów",
+        guild_ids=[settings.main_guild_id]
+    )
     
     @grupa.command(name="lista", description="Lista zapisanych embedów.")
     async def lista(self, interaction: discord.Interaction):

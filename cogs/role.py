@@ -25,7 +25,10 @@ class Role(commands.Cog):
             json.dump(self.ROLE_SETTINGS, f, indent=4)
 
     group = app_commands.Group(
-        name="role", description="Komenda do zarządzania grupami ról.")
+        name="role", 
+        description="Komenda do zarządzania grupami ról.",
+        guild_ids=[settings.main_guild_id]
+    )
 
     @group.command(name="lista", description="Wyświetla dostępne grupy ról.")
     async def lista(self, interaction: discord.Interaction) -> None:

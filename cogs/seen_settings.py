@@ -23,6 +23,7 @@ class SeenSettingsCog(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name="seensettings", description="Konfiguracja ustawień reakcji seen dla kanałów.")
+    @app_commands.guilds(discord.Object(id=settings.main_guild_id))
     @app_commands.describe(
         channel="Wybierz kanał (opcjonalnie, tylko przy aktualizacji)",
         mode="Wybierz tryb działania reakcji seen (opcjonalnie, tylko przy aktualizacji)",
