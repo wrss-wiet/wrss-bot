@@ -31,7 +31,8 @@ The bot requires three JSON files in the project root:
 
 If they do not exist, the bot will create empty ones, but you should seed them with a basic structure to avoid errors in `/embed` commands.
 
-> **⚠ Warning:** Ensure *embed_settings* file contain at least the default structure below before first use.
+> [!WARNING]
+> Ensure *embed_settings* file contain at least the default structure below before first use.
 
 ### Sample `embed_settings.json` structure
 
@@ -120,7 +121,8 @@ Example:
 /seensettings mode:Off channel:general
 ```
 
-> **Note:** The command above will disable adding reactions to any message in the `general` channel.
+> [!NOTE]
+> The command above will disable adding reactions to any message in the `general` channel.
 
 ### /role
 
