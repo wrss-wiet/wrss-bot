@@ -5,16 +5,13 @@ import discord
 
 from discord.ext import tasks
 from discord.ext import commands
-
-async def ready(bot: commands.Bot):
-    print(f"Logged in as {bot.user.name} in guild: {settings.main_guild_id}")
-    ArchEventsLoop(bot).archive_events.start()
+    
 
 class ArchEventsLoop:
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         
-    @tasks.loop(hours=6)
+    @tasks.loop(hours=12)
     async def archive_events(self):
         aktywne_kategoria = self.bot.get_channel(settings.events_category)
         
@@ -30,7 +27,7 @@ class ArchEventsLoop:
                         EVENT_SETTINGS = {}
                         
                     INACTIVE_DAYS = EVENT_SETTINGS.get(str(channel.id), settings.def_archive)
-                    print(INACTIVE_DAYS)
+                    # print(INACTIVE_DAYS)
                     
                     if last_message:
                         delta = datetime.now(timezone.utc) - last_message.created_at

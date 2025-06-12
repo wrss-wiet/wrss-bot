@@ -1,7 +1,6 @@
 import json
 import discord
 import settings
-
 from discord import app_commands
 from discord.ext import commands
 
@@ -25,6 +24,7 @@ class SeenSettingsCog(commands.Cog):
     @app_commands.command(name="seensettings", description="Konfiguracja ustawień reakcji seen dla kanałów.")
     @app_commands.guilds(discord.Object(id=settings.main_guild_id))
     @app_commands.describe(
+        help="Wyświetl pomoc dla tej komendy",
         channel="Wybierz kanał (opcjonalnie, tylko przy aktualizacji)",
         mode="Wybierz tryb działania reakcji seen (opcjonalnie, tylko przy aktualizacji)",
         scope="Zakres wyświetlonych ustawień: current - bieżący kanał, all - wszystkie (domyślnie)"
@@ -40,14 +40,53 @@ class SeenSettingsCog(commands.Cog):
             app_commands.Choice(name="All", value="all")
         ]
     )
-    async def seensettings(self, interaction: discord.Interaction, channel: discord.TextChannel = None, mode: str = None, scope: str = "all"):
+    async def seensettings(self, interaction: discord.Interaction, help: bool = False, channel: discord.TextChannel = None, mode: str = None, scope: str = "all"):
+
+        if help and (channel is not None or mode is not None or scope != "all"):
+            embed = discord.Embed(
+                title="❌ Błąd parametrów",
+                description="Parametr `help` nie może być używany razem z innymi parametrami.",
+                color=discord.Color.red()
+            )
+            return await interaction.response.send_message(embed=embed, ephemeral=True)
+        
+        if help:
+            embed = discord.Embed(
+                title="📖 Pomoc: /seensettings",
+                description="Komenda do zarządzania systemem reakcji 'seen' (widziane) na wiadomościach.",
+                color=discord.Color.blue()
+            )
+            embed.add_field(
+                name="🎯 Co robi ta komenda?",
+                value="Pozwala konfigurować automatyczne dodawanie reakcji 'seen' do wiadomości w określonych kanałach. System posiada trzy tryby pracy.",
+                inline=False
+            )
+            embed.add_field(
+                name="⚙️ Tryby działania:",
+                value="• **Always** - Zawsze dodaje reakcje\n• **ThreadsOnly** - Tylko w wątkach\n• **Off** - Wyłączone",
+                inline=False
+            )
+            embed.add_field(
+                name="📝 Przykłady użycia:",
+                value="• `/seensettings help:True` - Ta pomoc\n• `/seensettings` - Pokaż wszystkie ustawienia\n• `/seensettings channel:#kanał mode:Always` - Ustaw tryb dla kanału\n• `/seensettings scope:current` - Pokaż ustawienia bieżącego kanału",
+                inline=False
+            )
+            embed.add_field(
+                name="💡 Wskazówki:",
+                value="• Każdy kanał może mieć swój własny tryb reakcji\n• Domyślnie wszystkie kanały mają tryb 'Always'\n• Zmiany są zapisywane automatycznie",
+                inline=False
+            )
+            return await interaction.response.send_message(embed=embed, ephemeral=True)
+
         await interaction.response.defer(ephemeral=True)
 
         if mode is not None:
             if channel is None:
                 channel = interaction.channel
+
             SEEN_SETTINGS[str(channel.id)] = mode
             save_seen_settings()
+
             embed = discord.Embed(
                 title="Aktualizacja ustawień",
                 description=f"Zaktualizowano ustawienie dla kanału {channel.mention} na `{mode}`.",
@@ -56,7 +95,6 @@ class SeenSettingsCog(commands.Cog):
         else:
             if scope == "current":
                 ch = interaction.channel
-
                 try:
                     with open(CONFIG_FILE, "r") as f:
                         current_settings = json.load(f)
@@ -83,6 +121,7 @@ class SeenSettingsCog(commands.Cog):
                 for ch in guild.text_channels:
                     setting = current_settings.get(str(ch.id), "Always")
                     description += f"**{ch.name}** (ID: {ch.id}): `{setting}`\n"
+
                 embed.description = description
 
         await interaction.followup.send(embed=embed, ephemeral=True)

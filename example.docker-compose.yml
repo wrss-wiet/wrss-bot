@@ -15,4 +15,7 @@ services:
       - DOODLE_LINKS=<your_doodle_links>  # comma-separated list of URLs
       - VOICE_CREATOR=<your_voice_creator_id>
       - VC_CATEGORY=<your_vc_category_id>
+      - EVENTS_CATEGORY=<your_events_category_id>
+      - EVENTS_ARCHIVE=<your_events_archive_id>
+      - DEF_ARCHIVE=<default_archive_days>  # time in days
     restart: unless-stopped
