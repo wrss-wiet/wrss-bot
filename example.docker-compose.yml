@@ -2,6 +2,7 @@ version: "3.9"
 
 services:
   bot:
+    container_name: wrss-bot
     build:
       context: .
     image: wrss-bot:${TAG:-latest}
