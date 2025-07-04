@@ -1,21 +1,15 @@
 version: "3.9"
 
 services:
-  discord-bot:
-    image: wrss-bot:latest
-    build: .
-    environment:
-      - MAIN_GUILD_ID=<your_guild_id>
-      - SEEN_EMOJI_LONG_ID=<your_seen_emoji_long_id>
-      - DOODLE_CHANNEL_ID=<your_doodle_channel_id>
-      - DOODLE_SEEN_REACTION=0x2705   # unicode character
-      - NOTIFY_ROLE_ID=<your_notify_role_id>
-      - GRAPHIC_ROLE_ID=<your_graphic_role_id>
-      - DISCORD_CLIENT_TOKEN=<your_discord_client_token>
-      - DOODLE_LINKS=<your_doodle_links>  # comma-separated list of URLs
-      - VOICE_CREATOR=<your_voice_creator_id>
-      - VC_CATEGORY=<your_vc_category_id>
-      - EVENTS_CATEGORY=<your_events_category_id>
-      - EVENTS_ARCHIVE=<your_events_archive_id>
-      - DEF_ARCHIVE=<default_archive_days>  # time in days
+  bot:
+    build:
+      context: .
+    image: wrss-bot:${TAG:-latest}
+    env_file:
+      - /home/.../.../env/bot.env
     restart: unless-stopped
+    volumes:
+      - bot_data:/app/commands_settings
+
+volumes:
+  bot_data:
