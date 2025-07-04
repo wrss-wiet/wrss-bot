@@ -1,4 +1,5 @@
-name: deploy
+name: "🚀 Deploy"
+
 on:
   push:
     branches: [prod]
@@ -6,27 +7,32 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted
-
     steps:
       - uses: actions/checkout@v4
 
-      - name: Sync code from prod
+      - name: "🔄  Sync code"
         run: |
           cd /home/ubuntu/wrss-bot/repo
           git switch prod
           git fetch origin
           git reset --hard $GITHUB_SHA
 
-      - name: Build & restart
+      - name: "🏗️  Build image & restart"
         env:
           TAG: ${{ github.sha }}
         run: |
           cd /home/ubuntu/wrss-bot/repo
-          docker compose -f docker-compose.yml build bot
-          docker stop bot || true
-          docker rm   bot || true
-          TAG=${TAG} docker compose -f docker-compose.yml up -d
 
-      - name: Cleanup old images & left 2 latest containers
+          echo "🛠️  Build image $TAG"
+          docker compose -f docker-compose.yml build bot
+
+          echo "🛑  Stop old container"
+          docker stop wrss-bot || true
+          docker rm   wrss-bot || true
+
+          echo "🚀  Run new container"
+          TAG=$TAG docker compose -f docker-compose.yml up -d
+
+      - name: "🧹  Keep 2 newest images"
         run: |
           docker images wrss-bot -q | tail -n +3 | xargs -r docker rmi
