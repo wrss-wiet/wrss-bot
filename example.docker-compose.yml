@@ -10,7 +10,4 @@ services:
       - /home/.../.../env/bot.env
     restart: unless-stopped
     volumes:
-      - bot_data:/app/commands_settings
-
-volumes:
-  bot_data:
+      - ./commands_settings:/app/commands_settings
