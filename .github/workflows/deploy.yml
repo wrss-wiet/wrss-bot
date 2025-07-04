@@ -6,21 +6,21 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted
+    defaults:
+      run:
+        working-directory: ${{ github.workspace }}
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build image z tagiem SHA i restart
+      - name: Build & restart
+        env:
+          TAG: ${{ github.sha }}
         run: |
-          cd $GITHUB_WORKSPACE
-          export TAG=${GITHUB_SHA}
-          docker compose build bot
-
+          docker compose -f docker-compose.yml build bot
           docker stop bot || true
           docker rm   bot || true
+          docker compose -f docker-compose.yml up -d
 
-          TAG=${GITHUB_SHA} docker compose up -d
-
-      - name: Zachowaj 2 najnowsze obrazy
-        run: |
-          docker images 'wrss-bot' --format '{{.ID}}' \
-          | tail -n +3 | xargs -r docker rmi
+      - name: Zostaw 2 obrazy
+        run: docker images wrss-bot -q | tail -n +3 | xargs -r docker rmi
