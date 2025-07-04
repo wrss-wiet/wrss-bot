@@ -1,19 +1,11 @@
-FROM python:3.12
+FROM python:3.12 AS builder
+WORKDIR /build
+COPY requirements.txt .
+RUN pip install --user --no-cache-dir -r requirements.txt
 
-LABEL Maintainer="wrss.wiet"
-
+FROM python:3.12-slim
 WORKDIR /app
-
-COPY wrss-bot.py /app
-COPY settings.py /app
-COPY requirements.txt /app
-COPY reaction_utils.py /app
-COPY embed.py /app
-COPY cogs/ /app/cogs
-COPY events/ /app/events
-
-COPY commands_settings/ /app/commands_settings
-
-RUN python3 -m pip install -r requirements.txt
-
-CMD [ "python", "-u", "./wrss-bot.py"]
+ENV PATH="/root/.local/bin:$PATH"
+COPY --from=builder /root/.local /root/.local
+COPY . /app
+CMD ["python", "-u", "wrss-bot.py"]
