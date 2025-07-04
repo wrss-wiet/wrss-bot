@@ -1,4 +1,4 @@
-name: build-check
+name: "🧪 Build-Check"
 
 on:
   push:
@@ -14,7 +14,7 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install deps
+      - name: "📦 Install deps"
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
