@@ -13,8 +13,7 @@ jobs:
       - name: "🔄  Sync code"
         run: |
           cd /home/ubuntu/wrss-bot/repo
-          git switch prod
-          git fetch origin
+          git fetch origin prod
           git reset --hard $GITHUB_SHA
 
       - name: "🏗️  Build image & restart"
