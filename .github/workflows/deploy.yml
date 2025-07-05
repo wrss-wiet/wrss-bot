@@ -52,21 +52,20 @@ jobs:
           git reset --hard $GITHUB_SHA
 
       - name: "🏗️ Build image & restart"
-        env:
-          TAG: ${{ github.sha }}
         run: |
           cd /home/ubuntu/wrss-bot/repo
-          echo "🛠️ Building image $TAG"
-          TAG=$TAG docker compose -f docker-compose.yml build bot
-          echo "🛑 Stopping old container"
+          export TAG=${{ github.sha }}
+          docker compose -f docker-compose.yml build bot
           docker stop wrss-bot || true
-          docker rm   wrss-bot || true
-          echo "🚀 Starting new container"
-          TAG=$TAG docker compose -f docker-compose.yml up -d
+          docker rm wrss-bot || true
+          docker compose -f docker-compose.yml up -d
 
       - name: "🧹 Clean old & dangling images"
         run: |
-          docker images wrss-bot -q | tail -n +3 | xargs -r docker rmi
+          docker images wrss-bot --format "{{.Repository}}:{{.Tag}}" | \
+            sort -r | \
+            tail -n +3 | \
+            xargs -r docker rmi
           docker images -f dangling=true -q | xargs -r docker rmi
 
       - name: "🔍 Verify deployment"
