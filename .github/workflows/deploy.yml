@@ -10,6 +10,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: "🔑 Verify webhook url"
+        if: always()
+        run: |
+          echo "::notice::length=${#DISCORD_MONITORING_WEBHOOK}"
+          printf '%s' "$DISCORD_MONITORING_WEBHOOK" | od -An -t x1 | tail -n1
+        env:
+          DISCORD_MONITORING_WEBHOOK: ${{ secrets.DISCORD_MONITORING_WEBHOOK }}
+
       - name: "📢 Discord - Deploy Started"
         uses: appleboy/discord-action@v1.2.0
         with:
