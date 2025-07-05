@@ -14,13 +14,21 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: "🔧 Trim webhook (one-liner)"
+        id: hook
+        shell: bash
+        run: |
+          clean=$(printf '%s' "${{ secrets.DISCORD_MONITORING_WEBHOOK }}" | tr -d '\r\n\t ')
+          echo "::add-mask::$clean"
+          echo "url=$clean" >>"$GITHUB_OUTPUT"
+
       - name: "🔑 Verify webhook url"
         if: always()
+        shell: bash
         run: |
-          echo "::notice::length=${#DISCORD_MONITORING_WEBHOOK}"
-          printf '%s' "$DISCORD_MONITORING_WEBHOOK" | od -An -t x1 | tail -n1
-        env:
-          DISCORD_MONITORING_WEBHOOK: ${{ secrets.DISCORD_MONITORING_WEBHOOK }}
+          url="${{ steps.hook.outputs.url }}"
+          echo "::notice::length=${#url}"
+          printf '%s' "$url" | od -An -t x1 | tail -n1
 
       - name: "📦 Install dependencies"
         run: |
@@ -28,14 +36,13 @@ jobs:
           pip install -r requirements.txt
 
       - name: "🚦 Run tests"
-        run: |
-          pytest tests/test_compile.py -q
+        run: pytest tests/test_compile.py -q
 
       - name: "📢 Discord Notification - Success"
         if: success()
         uses: appleboy/discord-action@v1.2.0
         with:
-          webhook_url: ${{ secrets.DISCORD_MONITORING_WEBHOOK }}
+          webhook_url: ${{ steps.hook.outputs.url }}
           color: "65280"
           username: "🤖 CI Bot"
           message: |
@@ -54,7 +61,7 @@ jobs:
         if: failure()
         uses: appleboy/discord-action@v1.2.0
         with:
-          webhook_url: ${{ secrets.DISCORD_MONITORING_WEBHOOK }}
+          webhook_url: ${{ steps.hook.outputs.url }}
           color: "16711680"
           username: "🤖 CI Bot"
           message: |
