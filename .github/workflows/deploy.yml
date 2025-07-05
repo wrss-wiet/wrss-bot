@@ -22,8 +22,9 @@ jobs:
         if: always()
         shell: bash
         run: |
-          echo "::notice::length=${#{{ steps.hook.outputs.url }}}"
-          printf '%s' "${{ steps.hook.outputs.url }}" | od -An -t x1 | tail -n1
+          url="${{ steps.hook.outputs.url }}"
+          echo "::notice::length=${#url}"
+          printf '%s' "$url" | od -An -t x1 | tail -n1
 
       - name: "📢 Discord - Deploy Started"
         uses: appleboy/discord-action@v1.2.0
@@ -84,7 +85,7 @@ jobs:
             **Duration:** ${{ github.event.head_commit.timestamp }} → $(date -u +"%H:%M:%S")
             **Triggered by:** ${{ github.actor }}
             
-            🟢 Bot jest online z nową wersją.  
+            🟢 Bot jest online z nową wersją.
             🐳 Kontener: `wrss-bot:${{ github.sha }}`
 
       - name: "📢 Discord - Deploy Failed"
@@ -101,6 +102,6 @@ jobs:
             **Failed at:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
             **Triggered by:** ${{ github.actor }}
             
-            💥 Wdrażanie nie powiodło się!  
+            💥 Wdrażanie nie powiodło się!
             🔗 [Zobacz logi](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
             ⚠️ Bot może nadal działać na poprzedniej wersji
