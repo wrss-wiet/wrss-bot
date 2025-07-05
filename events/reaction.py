@@ -15,13 +15,13 @@ async def update_reaction_msg(bot, message: discord.Message):
     reactions = message.reactions
     reaction_msg = await get_reaction_msg(bot, message)
     if reaction_msg is not None:
-        reaction_msg_content = reactions_to_str(reactions)
+        reaction_msg_content = await reactions_to_str(reactions)
         await reaction_msg.edit(content=(f'<@&{settings.notify_role_id}>\n' + reaction_msg_content))
 
-def reactions_to_str(reactions) -> str:
+async def reactions_to_str(reactions: list[discord.Reaction]) -> str:
     message = "reactions:\n"
     for reaction in reactions:
-        message += f"{reaction.emoji} - ` {reaction.count - 1} `\n"
+        message += f"{reaction.emoji} - ` {len([user async for user in reaction.users() if not user.bot])} `\n"
     return message
 
 async def get_reaction_msg(bot, message: discord.Message):
