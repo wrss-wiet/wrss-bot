@@ -10,30 +10,85 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: "🔄  Sync code"
+      - name: "📢 Discord - Deploy Started"
+        uses: appleboy/discord-action@v1.2.0
+        with:
+          webhook_url: ${{ secrets.DISCORD_MONITORING_WEBHOOK }}
+          color: "16776960"
+          username: "🚀 Deploy Bot"
+          message: |
+            🟡 **Deploy Started**
+            
+            **SHA:** `${{ github.sha }}`
+            **Time:** ${{ github.event.head_commit.timestamp }}
+            **Trigger:** ${{ github.actor }}
+            
+            ⏳ Wdrażanie...
+
+      - name: "🔄 Sync code"
         run: |
           cd /home/ubuntu/wrss-bot/repo
           git fetch origin prod
           git reset --hard $GITHUB_SHA
 
-      - name: "🏗️  Build image & restart"
+      - name: "🏗️ Build image & restart"
         env:
           TAG: ${{ github.sha }}
         run: |
           cd /home/ubuntu/wrss-bot/repo
 
-          echo "🛠️  Build image $TAG"
+          echo "🛠️ Building image $TAG"
           docker compose -f docker-compose.yml build bot
 
-          echo "🛑  Stop old container"
+          echo "🛑 Stopping old container"
           docker stop wrss-bot || true
           docker rm   wrss-bot || true
 
-          echo "🚀  Run new container"
+          echo "🚀 Starting new container"
           TAG=$TAG docker compose -f docker-compose.yml up -d
 
-      - name: 🧹  Clean old & dangling images
+      - name: "🧹 Clean old & dangling images"
         run: |
           docker images wrss-bot -q | tail -n +3 | xargs -r docker rmi
-
           docker images -f dangling=true -q | xargs -r docker rmi
+
+      - name: "🔍 Verify deployment"
+        run: |
+          sleep 10
+          docker logs wrss-bot --tail 20
+
+      - name: "📢 Discord - Deploy Success"
+        if: success()
+        uses: appleboy/discord-action@v1.2.0
+        with:
+          webhook_url: ${{ secrets.DISCORD_MONITORING_WEBHOOK }}
+          color: "65280"
+          username: "🚀 Deploy Bot"
+          message: |
+            ✅ **Deploy Successful!**
+            
+            **SHA:** `${{ github.sha }}`
+            **Deploy Time:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+            **Duration:** ${{ github.event.head_commit.timestamp }} → $(date -u +"%H:%M:%S")
+            **Triggered by:** ${{ github.actor }}
+            
+            🟢 Bot jest online z nową wersją.
+            🐳 Kontener: `wrss-bot:${{ github.sha }}`
+
+      - name: "📢 Discord - Deploy Failed"
+        if: failure()
+        uses: appleboy/discord-action@v1.2.0
+        with:
+          webhook_url: ${{ secrets.DISCORD_MONITORING_WEBHOOK }}
+          color: "16711680"
+          username: "🚀 Deploy Bot"
+          message: |
+            🔴 **Deploy Failed!**
+            
+            **SHA:** `${{ github.sha }}`
+            **Failed at:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+            **Triggered by:** ${{ github.actor }}
+            
+            💥 Wdrażanie nie powiodło się!
+            🔗 [Zobacz logi](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            ⚠️ Bot może nadal działać na poprzedniej wersji
