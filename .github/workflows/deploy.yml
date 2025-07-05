@@ -41,8 +41,9 @@ jobs:
             
             **SHA:** `${{ github.sha }}`
             **Trigger:** ${{ github.actor }}
+            **Workflow:** `${{ github.workflow }}`
             
-            ⏳ Wdrażanie...
+            ⏳ Wdrażanie ...
 
       - name: "🔄 Sync code"
         run: |
