@@ -30,7 +30,7 @@ jobs:
         uses: appleboy/discord-action@v1.2.0
         with:
           webhook_url: ${{ steps.hook.outputs.url }}
-          color: "14731027"
+          color: "afab0e"
           username: "🚀 Deploy Bot"
           message: "🟡 **Deploy Started**\n\n**SHA:** `${{ github.sha }}`\n**Trigger:** ${{ github.actor }}\n\n⏳ Wdrażanie ..."
 
@@ -68,7 +68,7 @@ jobs:
         uses: appleboy/discord-action@v1.2.0
         with:
           webhook_url: ${{ steps.hook.outputs.url }}
-          color: "5763719"
+          color: "07772e"
           username: "🚀 Deploy Bot"
           message: |
             ✅ **Deploy Successful!**
@@ -85,7 +85,7 @@ jobs:
         uses: appleboy/discord-action@v1.2.0
         with:
           webhook_url: ${{ steps.hook.outputs.url }}
-          color: "15548997"
+          color: "960808"
           username: "🚀 Deploy Bot"
           message: |
             🔴 **Deploy Failed!**
