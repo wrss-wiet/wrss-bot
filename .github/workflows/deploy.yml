@@ -57,7 +57,7 @@ jobs:
         run: |
           cd /home/ubuntu/wrss-bot/repo
           echo "🛠️ Building image $TAG"
-          docker compose -f docker-compose.yml build bot
+          TAG=$TAG docker compose -f docker-compose.yml build bot
           echo "🛑 Stopping old container"
           docker stop wrss-bot || true
           docker rm   wrss-bot || true
