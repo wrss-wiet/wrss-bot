@@ -62,8 +62,9 @@ jobs:
 
       - name: "🧹 Clean old & dangling images"
         run: |
-          docker images wrss-bot --format "{{.Repository}}:{{.Tag}}" | \
-            sort -r | \
+          docker images wrss-bot --format "{{.Repository}}:{{.Tag}} {{.CreatedAt}}" | \
+            sort -k2 -r | \
+            awk '{print $1}' | \
             tail -n +3 | \
             xargs -r docker rmi
           docker images -f dangling=true -q | xargs -r docker rmi
