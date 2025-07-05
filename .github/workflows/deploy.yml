@@ -36,7 +36,14 @@ jobs:
           webhook_url: ${{ steps.hook.outputs.url }}
           color: "afab0e"
           username: "🚀 Deploy Bot"
-          message: "🟡 **Deploy Started**\n\n**SHA:** `${{ github.sha }}`\n**Trigger:** ${{ github.actor }}\n\n⏳ Wdrażanie ..."
+          message: |
+            🟡 **Deploy Started**
+            
+            **SHA:** `${{ github.sha }}`
+            **Trigger:** ${{ github.actor }}
+            **Workflow:** `${{ github.workflow }}`
+            
+            ⏳ Wdrażanie ...
 
       - name: "🔄 Sync code"
         run: |
