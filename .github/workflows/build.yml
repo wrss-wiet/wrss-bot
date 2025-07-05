@@ -43,7 +43,7 @@ jobs:
         uses: appleboy/discord-action@v1.2.0
         with:
           webhook_url: ${{ steps.hook.outputs.url }}
-          color: "965707"
+          color: "07772e"
           username: "🤖 CI Bot"
           message: |
             ✅ **Build Success na main**
@@ -62,7 +62,7 @@ jobs:
         uses: appleboy/discord-action@v1.2.0
         with:
           webhook_url: ${{ steps.hook.outputs.url }}
-          color: "10357258"
+          color: "960808"
           username: "🤖 CI Bot"
           message: |
             ❌ **Build Failed na main**
