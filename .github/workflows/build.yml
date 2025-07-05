@@ -26,8 +26,9 @@ jobs:
         if: always()
         shell: bash
         run: |
-          echo "::notice::length=${#{{ steps.hook.outputs.url }}}"
-          printf '%s' "${{ steps.hook.outputs.url }}" | od -An -t x1 | tail -n1
+          url="${{ steps.hook.outputs.url }}"
+          echo "::notice::length=${#url}"
+          printf '%s' "$url" | od -An -t x1 | tail -n1
 
       - name: "📦 Install dependencies"
         run: |
@@ -53,7 +54,7 @@ jobs:
             **Author:** ${{ github.actor }}
             **Workflow:** ${{ github.workflow }}
             
-            🧪 Wszystkie testy przeszły pomyślnie!  
+            🧪 Wszystkie testy przeszły pomyślnie!
             📦 Kod gotowy na prod
 
       - name: "📢 Discord Notification - Failure"
@@ -72,5 +73,5 @@ jobs:
             **Author:** ${{ github.actor }}
             **Workflow:** ${{ github.workflow }}
             
-            💥 Testy nie przeszły ‑ sprawdź logi!  
+            💥 Testy nie przeszły - sprawdź logi!
             🔗 [Zobacz szczegóły](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
