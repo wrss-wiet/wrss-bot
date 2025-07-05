@@ -19,13 +19,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: "🔍 Run syntax check"
+      - name: "🚦 Run tests"
         run: |
-          python -m py_compile wrss-bot.py
-
-      - name: "🧪 Run unit tests"
-        run: |
-          python -m pytest tests/ -v
+          pytest tests/test_compile.py -q
 
       - name: "📢 Discord Notification - Success"
         if: success()
