@@ -30,16 +30,9 @@ jobs:
         uses: appleboy/discord-action@v1.2.0
         with:
           webhook_url: ${{ steps.hook.outputs.url }}
-          color: "16776960"
+          color: "afab0e"
           username: "🚀 Deploy Bot"
-          message: |
-            🟡 **Deploy Started**
-            
-            **SHA:** `${{ github.sha }}`
-            **Time:** ${{ github.event.head_commit.timestamp }}
-            **Trigger:** ${{ github.actor }}
-            
-            ⏳ Wdrażanie...
+          message: "🟡 **Deploy Started**\n\n**SHA:** `${{ github.sha }}`\n**Trigger:** ${{ github.actor }}\n\n⏳ Wdrażanie ..."
 
       - name: "🔄 Sync code"
         run: |
@@ -75,14 +68,13 @@ jobs:
         uses: appleboy/discord-action@v1.2.0
         with:
           webhook_url: ${{ steps.hook.outputs.url }}
-          color: "65280"
+          color: "07772e"
           username: "🚀 Deploy Bot"
           message: |
             ✅ **Deploy Successful!**
             
             **SHA:** `${{ github.sha }}`
             **Deploy Time:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
-            **Duration:** ${{ github.event.head_commit.timestamp }} → $(date -u +"%H:%M:%S")
             **Triggered by:** ${{ github.actor }}
             
             🟢 Bot jest online z nową wersją.
@@ -93,7 +85,7 @@ jobs:
         uses: appleboy/discord-action@v1.2.0
         with:
           webhook_url: ${{ steps.hook.outputs.url }}
-          color: "16711680"
+          color: "960808"
           username: "🚀 Deploy Bot"
           message: |
             🔴 **Deploy Failed!**
