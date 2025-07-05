@@ -16,18 +16,15 @@ jobs:
 
       - name: "📦 Install dependencies"
         run: |
-          cd /home/ubuntu/wrss-bot/repo
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
       - name: "🔍 Run syntax check"
         run: |
-          cd /home/ubuntu/wrss-bot/repo
           python -m py_compile wrss-bot.py
 
       - name: "🧪 Run unit tests"
         run: |
-          cd /home/ubuntu/wrss-bot/repo
           python -m pytest tests/ -v
 
       - name: "📢 Discord Notification - Success"
