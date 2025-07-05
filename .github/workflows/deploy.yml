@@ -30,15 +30,9 @@ jobs:
         uses: appleboy/discord-action@v1.2.0
         with:
           webhook_url: ${{ steps.hook.outputs.url }}
-          color: "15105570"
+          color: "14731027"
           username: "🚀 Deploy Bot"
-          message: |
-            🟡 **Deploy Started**
-            
-            **SHA:** `${{ github.sha }}`
-            **Trigger:** ${{ github.actor }}
-            
-            ⏳ Wdrażanie...
+          message: "🟡 **Deploy Started**\n\n**SHA:** `${{ github.sha }}`\n**Trigger:** ${{ github.actor }}\n\n⏳ Wdrażanie ..."
 
       - name: "🔄 Sync code"
         run: |
